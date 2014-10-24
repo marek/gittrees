@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 
+"""post-checkout-gittrees: Setup remotes from a project's .gittrees meta file."""
+__author__      = "Marek Kudlacz"
+__copyright__   = "Copyright 2014, Marek Kudlacz"
+__license__     = "LGPL"
+
 import sys
 import os
 import re
 import ConfigParser
-from subprocess import call
+from subprocess import call,check_output
 
-# check if GIT_DIR is defined, otherwise abort
+# check if GIT_WORK_TREE is defined, otherwise abort
 if not os.environ.has_key("GIT_WORK_TREE"):
     sys.stderr.write("Error could not find 'GIT_WORK_TREE' environment variable");
     sys.exit(1)
@@ -15,24 +20,20 @@ git_dir = os.environ.get("GIT_WORK_TREE")
 config = ConfigParser.RawConfigParser()
 config.read("%s/.gittrees" % git_dir);
 
-# get list of existing subtrees
-
-# define remotes and subtrees
+# define remotes
 for section in config.sections():
     m = re.search('^subtree\s+\"(.+)\"\s*$',section);
-    remote=None
+    remote = None
     if not m:
         continue
-    remote=m.group(1)
+    remote = m.group(1)
     url = config.get(section, "url")
     path = config.get(section, "path")
     branch = config.get(section, "branch")
 
-    if call(["git", "-C", git_dir, "remote", "add", remote, url]):
+    # only add remote if it does not exist
+    remoteExists = remote in check_output(["git", "-C", git_dir, "remote"]).split('\n')
+    if not remoteExists and call(["git", "-C", git_dir, "remote", "add", remote, url]):
         sys.stderr.write("Failed to add remote");
         sys.exit(1)
-    if call(["git", "-C", git_dir, "subtree", "add", "--prefix", path, remote, branch]):
-        sys.stderr.write("Failed to define subtree");
-        sys.exit(1)
-
 

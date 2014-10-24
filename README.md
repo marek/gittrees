@@ -3,7 +3,7 @@ gittrees
 gittrees is a git template that allows you to
 provide subtree meta data with your repository.
 Define your subtrees in .gittrees and the hooks provided
-with the template will configure your remotes and subtrees
+with the template will configure your remotes
 on a clone or checkout.
 
 
@@ -23,20 +23,18 @@ Every time you clone a project these submodules remain defined.
 ##### subtrees #####
 On the other hand subtrees merge another repository's code directly
 into your current project. Everytime you clone the code is there.
-Although it is your responsiblity to add the remotes for the subtree
-and also define their local prefix.
+Although it is your responsiblity to add the remotes for the subtree.
 
 
 This is an annoyance if a lot of people are working on the same project.
-If a new person glances at the code base, how would you know you needed to
-add a subtree?
+If a new person glances at the code base, how would you know where the source came from?
 
 
 solution
 --------
 git subtree helper templates. These templates have a script
 that will read a .gittrees file from your project's root
-and then setup the remotes and subtrees for you.
+and then setup the remotes for you.
 
 The syntax of this .gittrees file is borrowed from:
 `https://github.com/helmo/git/tree/subtree-updates`
@@ -74,5 +72,4 @@ url = <remote url>
 path = <local project path that is the subtree root>
 branch = <remote subtree branch>
 ```
-
 

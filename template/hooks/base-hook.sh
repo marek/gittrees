@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
+#title       : base-hook.sh
+#description : Allows the use of multiple hooks, and for hooks
+#              to be run from user, local and project levels.
+#author      : Marek Kudlacz
+#copyright   : Copyright (C) 2014 Marek Kudlacz
+#license     : LGPL
 
-# disoover GIT_WORK_TREE if git did not provide it
-#if [ -z "$GIT_WORK_TREE"] && [ `basename "$GIT_DIR"` -eq ".git" ]; then
+
+# discover GIT_WORK_TREE if git did not provide it
 if [ -z "$GIT_WORK_TREE"] && [ `basename "$GIT_DIR"` == ".git" ]; then
     export GIT_WORK_TREE=`dirname "$GIT_DIR"`
 fi
@@ -26,15 +32,19 @@ function run_hooks () {
 
     for hook in "$hook_dir/$hook_name" "$hook_dir/$hook_name."*
     do
-        echo "$hook"
+        if [ -n "$GIT_TRACE" ]; then
+            echo "$hook"
+        fi
         if [ -x "$hook" ]; then
-            echo "running hook: $hook"
+            if [ -n "$GIT_TRACE" ]; then
+                echo "running hook: $hook"
+            fi
             echo "$HOOK_STDIN" | $hook "$@"
-            if $?; then
+            if [ $? -ne 0 ]; then
                 echo "Error running hook: `$hook`"
                 exit 1
             fi
-        fi
+         fi
     done
 }
 
