@@ -9,21 +9,22 @@ on a clone or checkout.
 
 submodules vs subtrees
 --------
-Both at work and home, my git repositories use a
-lot of submodules and subtrees. They are very similar
-in that they both allow you to import another
+They are very similar in that they both allow you to import another
 repository as a sub branch.
 
 ##### submodules #####
-git defines submodules in the `<project>/.gitmodules`
-You need to explicitly pull in source using the `git submodule` command.
+git defines submodules in the `<project>/.gitmodules` file.
+When you clone a project or checkout a branch, the submodule code is
+not checked out by default. You need to explicitly pull in source
+using the `git submodule` command.
+
 Every time you clone a project these submodules remain defined.
 
 ##### subtrees #####
 On the other hand subtrees merge another repository's code directly
 into your current project. Everytime you clone the code is there.
 Although it is your responsiblity to add the remotes for the subtree
-and also define their local branch.
+and also define their local prefix.
 
 
 This is an annoyance if a lot of people are working on the same project.
@@ -33,9 +34,13 @@ add a subtree?
 
 solution
 --------
-git subtree helper templates
+git subtree helper templates. These templates have a script
+that will read a .gittrees file from your project's root
+and then setup the remotes and subtrees for you.
 
-
+The syntax of this .gittrees file is borrowed from:
+`https://github.com/helmo/git/tree/subtree-updates`
+A project that modifies the git subtree feature itself.
 
 
 installation
