@@ -39,9 +39,13 @@ git subtree helper templates
 
 
 installation
-=========
+-------
+Check out the source and set the default git template:
+```
 git clone git@github.com:marek/gittrees.git
 git config --global init.templatedir /path/to/gittrees/template
+```
+
 
 In your project that uses subtrees create a file named `.gittrees`
 in the root. An example of the contents is as shown:
