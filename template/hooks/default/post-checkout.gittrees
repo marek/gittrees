@@ -13,16 +13,16 @@ from subprocess import call,check_output
 
 # check if GIT_WORK_TREE is defined, otherwise abort
 if not os.environ.has_key("GIT_WORK_TREE"):
-    sys.stderr.write("Error could not find 'GIT_WORK_TREE' environment variable");
+    print >> sys.stderr, "Error could not find 'GIT_WORK_TREE' environment variable (GIT_DIR = %s)" % os.environ.get("GIT_DIR")
     sys.exit(1)
 git_dir = os.environ.get("GIT_WORK_TREE")
 
 config = ConfigParser.RawConfigParser()
-config.read("%s/.gittrees" % git_dir);
+config.read("%s/.gittrees" % git_dir)
 
 # define remotes
 for section in config.sections():
-    m = re.search('^subtree\s+\"(.+)\"\s*$',section);
+    m = re.search('^subtree\s+\"(.+)\"\s*$',section)
     remote = None
     if not m:
         continue
@@ -34,6 +34,6 @@ for section in config.sections():
     # only add remote if it does not exist
     remoteExists = remote in check_output(["git", "-C", git_dir, "remote"]).split('\n')
     if not remoteExists and call(["git", "-C", git_dir, "remote", "add", remote, url]):
-        sys.stderr.write("Failed to add remote");
+        print >> sys.stderr, "Failed to add remote"
         sys.exit(1)
 

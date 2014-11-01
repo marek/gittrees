@@ -8,8 +8,14 @@
 
 
 # discover GIT_WORK_TREE if git did not provide it
-if [ -z "$GIT_WORK_TREE"] && [ `basename "$GIT_DIR"` == ".git" ]; then
-    export GIT_WORK_TREE=`dirname "$GIT_DIR"`
+echo "GIT_DIR=$GIT_DIR"
+if [ -z "$GIT_WORK_TREE"]; then
+    if [ `basename "$GIT_DIR"` == ".git" ]; then
+        export GIT_WORK_TREE=`dirname "$GIT_DIR"`
+    elif [[ "$GIT_DIR" == *"/.git/modules/"* ]]; then
+        # special case for with GIT_DIR is a submodule
+        export GIT_WORK_TREE=`echo "$GIT_DIR" | sed "s|/\.git/modules/.\+$||"``echo "$GIT_DIR" | sed "s|^/.\+/\.git/modules/|/|"`
+    fi
 fi
 
 HOOK=`basename $0`                      # the name of the hook being called
