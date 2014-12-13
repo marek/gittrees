@@ -9,14 +9,15 @@ on a clone or checkout.
 
 submodules vs subtrees
 --------
-They are very similar in that they both allow you to import another
+Both allow you to import another
 repository as a sub branch.
 
 ##### submodules #####
-git defines submodules in the `<project>/.gitmodules` file.
+By running `git submodule add <url> <path>`, git stores the submodules
+definitions in the `<project>/.gitmodules` file.
 When you clone a project or checkout a branch, the submodule code is
 not checked out by default. You need to explicitly pull in source
-using the `git submodule` command.
+using the `git submodule update --init` command.
 
 Every time you clone a project these submodules remain defined.
 
@@ -30,7 +31,7 @@ This is an annoyance if a lot of people are working on the same project.
 If a new person glances at the code base, how would you know where the source came from?
 
 
-solution
+Solution
 --------
 git subtree helper templates. These templates have a script
 that will read a .gittrees file from your project's root
@@ -41,7 +42,7 @@ The syntax of this .gittrees file is borrowed from:
 A project that modifies the git subtree feature itself.
 
 
-installation
+Installation
 -------
 Check out the source and set the default git template:
 ```
@@ -72,4 +73,26 @@ url = <remote url>
 path = <local project path that is the subtree root>
 branch = <remote subtree branch>
 ```
+
+
+Hooks and git Template
+======
+This repo is meant for showing off a script for subtrees,
+but the base project template also allows an easy way of adding
+multiple hooks for the same call.
+
+Drop scripts into your:
+
+<template dir>/defaults
+<template dir>/local
+<project dir>/hooks
+
+where the script is named:
+
+`<hook name>` or `<hook name>.<unique name>`
+example
+
+post-commit.foo
+
+don't forget the execute permissions!
 
